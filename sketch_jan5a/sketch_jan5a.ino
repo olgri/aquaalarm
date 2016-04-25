@@ -65,7 +65,7 @@ void loop() // run over and over
 {
 if (alarm_on==true){
 if (get_temperature()>30){
-  send_SMS("+375297464685", "Alarm, temp="+String( get_temperature()), GSMSerial);
+  send_SMS("+375291660887", "Alarm, temp="+String( get_temperature()), GSMSerial);
   delay(60000);
   }
 
@@ -83,9 +83,9 @@ if (!GSMSerial.available())
             //отреагируем на него соответствующим образом
             if (!currStr.compareTo("?")) {
               if (alarm_on){
-              send_SMS("+375297464685", "Alarm = ON, Temp = "+String(get_temperature()), GSMSerial);}
+              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature()), GSMSerial);}
               else{
-              send_SMS("+375297464685", "Alarm = OFF, Temp = "+String(get_temperature()), GSMSerial);}
+              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature()), GSMSerial);}
               GSMSerial.print("AT+CMGDA=\"DEL ALL\"\n");// удаляем все смс во избежании переполнения
               }              
              //   Сбрасываем СМС-кой показания датчиков
