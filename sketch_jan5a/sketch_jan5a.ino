@@ -87,17 +87,18 @@ void loop() // run over and over
 if (alarm_on==true){
 if (get_temperature()>30){
   send_SMS("+375291660887", "Alarm, temp="+String( get_temperature()), GSMSerial);
-  delay(60000);
   }
-
-
+if (get_power()<4){
+  send_SMS("+375291660887", "Alarm, NO POWER!", GSMSerial);
+  }
+  delay(60000);
 }
 
 if (!GSMSerial.available())
         return;
     
     char currSymb = GSMSerial.read(); 
-    Serial.write(currSymb);
+//    Serial.write(currSymb);
     if ('\r' == currSymb) {
         if (isStringMessage) {
             //если текущая строка - SMS-сообщение,
@@ -111,7 +112,6 @@ if (!GSMSerial.available())
               }              
              //   Сбрасываем СМС-кой показания датчиков
             else if (!currStr.compareTo("!")) {
-            //  GSMSerial.print("AT+CUSD=1,\"*120#\"\n"); // делаем запрос баланса
               if (alarm_on){
                alarm_on=false;} else
              {
