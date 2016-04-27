@@ -10,6 +10,7 @@ float vin = 0.0;
 float R1 = 100000.0; // сопротивление R1 (100K)
 float R2 = 10000.0; // сопротивление R2 (10K)
 int value = 0;
+String phoneNumber="+375291660887";
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -20,6 +21,7 @@ boolean isStringMessage = false; // Переменная принимает зн
 boolean alarm_on = true; // переменная отвечающая за режим тревоги, труе=включен, фолс=выключен
 int i;
 String new_curr_Str;
+long AlarmTime=0;
 
 void setup()  
 {
@@ -41,7 +43,7 @@ void setup()
  GSMSerial.print("AT+CPBS=\"SM\"\r");
 // delay(1500);
 // GSMSerial.print("AT+CNMI=1,2,2,1,0\r");
-
+send_SMS(phoneNumber, "Alarm ON, number="+phoneNumber, GSMSerial); 
    }
 
 /*
@@ -85,13 +87,16 @@ float get_power()
 void loop() // run over and over
 {
 if (alarm_on==true){
+if (millis()-AlarmTime>120000){
 if (get_temperature()>30){
-  send_SMS("+375291660887", "Alarm, temp="+String( get_temperature()), GSMSerial);
+  send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
+  AlarmTime=millis();
   }
 if (get_power()<4){
-  send_SMS("+375291660887", "Alarm, NO POWER!", GSMSerial);
+  send_SMS(phoneNumber, "Alarm, NO POWER!", GSMSerial);
+  AlarmTime=millis();
   }
-  delay(60000);
+}
 }
 
 if (!GSMSerial.available())
@@ -105,9 +110,9 @@ if (!GSMSerial.available())
             //отреагируем на него соответствующим образом
             if (!currStr.compareTo("?")) {
               if (alarm_on){  
-              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
+              send_SMS(phoneNumber, "Alarm = ON, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
               else{
-              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
+              send_SMS(phoneNumber, "Alarm = OFF, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
               GSMSerial.print("AT+CMGDA=\"DEL ALL\"\n");// удаляем все смс во избежании переполнения
               }              
              //   Сбрасываем СМС-кой показания датчиков
