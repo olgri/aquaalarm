@@ -2,8 +2,14 @@
 #include <SoftwareSerial.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-
 #define ONE_WIRE_BUS 2 // вывод Data подключен ко 2 порту Ардуино
+
+int analogInput = 0; // канал определения вольтажа
+float vout = 0.0;
+float vin = 0.0;
+float R1 = 100000.0; // сопротивление R1 (100K)
+float R2 = 10000.0; // сопротивление R2 (10K)
+int value = 0;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -17,6 +23,7 @@ String new_curr_Str;
 
 void setup()  
 {
+  pinMode(analogInput, INPUT);
   // Open serial communications and wait for port to open:
   Serial.begin(19200);
   GSMSerial.begin(19200);
@@ -61,6 +68,20 @@ float get_temperature()
   return sensors.getTempCByIndex(0);
   }
 
+float get_power()
+{
+     // считывание аналогового значения
+   value = analogRead(analogInput);
+   vout = (value * 5.0) / 1024.0;
+   vin = vout / (R2/(R1+R2)); 
+   if (vin<0.09) {
+   vin=0.0;// обнуляем нежелательное значение
+} 
+    Serial.println(vin);
+    return vin;
+
+  }
+
 void loop() // run over and over
 {
 if (alarm_on==true){
@@ -83,9 +104,9 @@ if (!GSMSerial.available())
             //отреагируем на него соответствующим образом
             if (!currStr.compareTo("?")) {
               if (alarm_on){
-              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature()), GSMSerial);}
+              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature()), GSMSerial)+" Power="+String(get_power());}
               else{
-              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature()), GSMSerial);}
+              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature()), GSMSerial)+" Power="+String(get_power());}
               GSMSerial.print("AT+CMGDA=\"DEL ALL\"\n");// удаляем все смс во избежании переполнения
               }              
              //   Сбрасываем СМС-кой показания датчиков
