@@ -103,10 +103,10 @@ if (!GSMSerial.available())
             //если текущая строка - SMS-сообщение,
             //отреагируем на него соответствующим образом
             if (!currStr.compareTo("?")) {
-              if (alarm_on){
-              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature()), GSMSerial)+" Power="+String(get_power());}
+              if (alarm_on){  
+              send_SMS("+375291660887", "Alarm = ON, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
               else{
-              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature()), GSMSerial)+" Power="+String(get_power());}
+              send_SMS("+375291660887", "Alarm = OFF, Temp = "+String(get_temperature())+" Power="+String(get_power()), GSMSerial);}
               GSMSerial.print("AT+CMGDA=\"DEL ALL\"\n");// удаляем все смс во избежании переполнения
               }              
              //   Сбрасываем СМС-кой показания датчиков
