@@ -92,10 +92,6 @@ if (get_temperature()>30){
   send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
   AlarmTime=millis();
   }
-if (get_temperature()>30){
-  send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
-  AlarmTime=millis();
-  }
 if (get_temperature()<23){
   send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
   AlarmTime=millis();
