@@ -10,7 +10,7 @@ float vin = 0.0;
 float R1 = 100000.0; // сопротивление R1 (100K)
 float R2 = 10000.0; // сопротивление R2 (10K)
 int value = 0;
-String phoneNumber="+375291660887";
+String phoneNumber="+375297553255";
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
