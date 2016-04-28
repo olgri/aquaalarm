@@ -25,6 +25,7 @@ long AlarmTime=0;
 
 void setup()  
 {
+  delay(90000)
   pinMode(analogInput, INPUT);
   // Open serial communications and wait for port to open:
   Serial.begin(19200);
