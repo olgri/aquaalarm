@@ -25,7 +25,7 @@ long AlarmTime=0;
 
 void setup()  
 {
-  delay(90000)
+  delay(90000);
   pinMode(analogInput, INPUT);
   // Open serial communications and wait for port to open:
   Serial.begin(19200);
@@ -93,7 +93,7 @@ if (get_temperature()>30){
   send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
   AlarmTime=millis();
   }
-if (get_temperature()<23){
+if (get_temperature()<21){
   send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
   AlarmTime=millis();
   }
