@@ -5,6 +5,7 @@
 #define ONE_WIRE_BUS 2 // вывод Data подключен ко 2 порту Ардуино
 
 int analogInput = 0; // канал определения вольтажа
+float tAlarm, tMax=32, tMin=21;
 float vout = 0.0;
 float vin = 0.0;
 float R1 = 100000.0; // сопротивление R1 (100K)
@@ -88,15 +89,33 @@ float get_power()
 void loop() // run over and over
 {
 if (alarm_on==true){
-if (millis()-AlarmTime>120000){
-if (get_temperature()>30){
-  send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
-  AlarmTime=millis();
+if (millis()-AlarmTime>600000){
+
+if (get_temperature()>tMax){
+  delay(1000);
+  if (get_temperature()>tMax){
+    delay(30000);
+    tAlarm=get_temperature();
+    if (tAlarm>tMax){
+     send_SMS(phoneNumber, "Alarm, temp="+String(tAlarm), GSMSerial);
+     AlarmTime=millis();
+    }
   }
-if (get_temperature()<21){
-  send_SMS(phoneNumber, "Alarm, temp="+String( get_temperature()), GSMSerial);
-  AlarmTime=millis();
+}
+
+if (get_temperature()<tMin){
+  delay(1000);
+  if (get_temperature()<tMin){
+    delay(30000);
+    tAlarm=get_temperature();
+    if (tAlarm<tMin){
+     send_SMS(phoneNumber, "Alarm, temp="+String(tAlarm), GSMSerial);
+     AlarmTime=millis();
+    }
   }
+}
+
+
 if (get_power()<4){
   send_SMS(phoneNumber, "Alarm, NO POWER!", GSMSerial);
   AlarmTime=millis();
